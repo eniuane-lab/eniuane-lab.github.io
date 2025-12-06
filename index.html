@@ -2,45 +2,76 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Materiais</title>
-
-    <!-- Importando o CSS externo -->
+    <title>Gerar URL com Frases</title>
     <link rel="stylesheet" href="script.css">
 </head>
 <body>
 
-    <h1>Lista de Materiais</h1>
+    <h1>Gerador de URL com Frases</h1>
 
-    <input id="campo" type="text" placeholder="Digite um material">
-    <button onclick="adicionar()">Adicionar</button>
+    <div id="input-container">
+        <textarea id="frases" placeholder="Digite uma frase por linha..."></textarea>
+        <button id="gerar">Gerar URL</button>
+    </div>
 
-    <ul id="lista"></ul>
+    <div id="resultado" class="hidden">
+        <h2>Sua URL:</h2>
+        <input id="url" readonly>
+    </div>
 
-    <script>
-        function adicionar() {
-            let texto = document.getElementById("campo").value;
+    <div id="visualizacao" class="hidden">
+        <h2>Frases carregadas da URL:</h2>
+        <ul id="lista"></ul>
+        <button id="embaralhar">Embaralhar</button>
+    </div>
 
-            if (texto.trim() === "") return;
+<script>
+    // 📌 1. Se existe parâmetro "f", significa que estamos abrindo a URL
+    const params = new URLSearchParams(window.location.search);
+    const frasesCodificadas = params.get("f");
 
-            let lista = document.getElementById("lista");
+    if (frasesCodificadas) {
+        document.getElementById("visualizacao").classList.remove("hidden");
 
-            let li = document.createElement("li");
-            li.innerHTML = `
-                <span>${texto}</span>
-                <button class="excluir" onclick="remover(this)">Excluir</button>
-            `;
+        let frases = frasesCodificadas.split("|");
 
-            lista.appendChild(li);
+        const lista = document.getElementById("lista");
 
-            document.getElementById("campo").value = "";
+        function atualizarLista() {
+            lista.innerHTML = "";
+            frases.forEach(f => {
+                const li = document.createElement("li");
+                li.textContent = f;
+                lista.appendChild(li);
+            });
         }
 
-        function remover(botao) {
-            let li = botao.parentElement;
-            li.remove();
+        atualizarLista();
+
+        document.getElementById("embaralhar").onclick = () => {
+            frases.sort(() => Math.random() - 0.5);
+            atualizarLista();
+        };
+    }
+
+    // 📌 2. Gerar URL com frases digitadas
+    document.getElementById("gerar").onclick = () => {
+        const texto = document.getElementById("frases").value.trim();
+
+        if (!texto) {
+            alert("Digite ao menos uma frase!");
+            return;
         }
-    </script>
+
+        const lista = texto.split("\n").map(f => f.trim()).filter(f => f !== "");
+        const cod = lista.join("|"); // separador simples
+
+        const urlGerada = `${window.location.origin}${window.location.pathname}?f=${encodeURIComponent(cod)}`;
+
+        document.getElementById("resultado").classList.remove("hidden");
+        document.getElementById("url").value = urlGerada;
+    };
+</script>
 
 </body>
 </html>
