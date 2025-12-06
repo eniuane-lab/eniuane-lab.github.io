@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Materiais - PyScript</title>
 
-    <!-- PyScript CDN OFICIAL FUNCIONAL -->
+    <!-- PyScript que FUNCIONA no GitHub Pages -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
@@ -15,7 +15,7 @@
             max-width: 600px;
             margin: 30px auto;
             padding: 20px;
-            background: #f6f6f6;
+            background: #fafafa;
             border-radius: 10px;
         }
         input, button {
@@ -28,10 +28,10 @@
         }
         ul {
             margin-top: 20px;
-            padding-left: 20px;
         }
     </style>
 </head>
+
 <body>
 
     <h1>Lista de Materiais</h1>
@@ -41,21 +41,29 @@
 
     <ul id="lista"></ul>
 
-    <py-script>
+    <!-- Ambiente PyScript obrigatório -->
+    <py-env>
+        - pyscript
+    </py-env>
+
+    <!-- Código Python CORRETO -->
+    <script type="py">
 from pyscript import document
 
 def adicionar():
     item = document.querySelector("#item").value
-    if item.strip() == "":
+
+    if not item.strip():
         return
-    
+
     lista = document.querySelector("#lista")
+
     li = document.createElement("li")
     li.innerText = item
     lista.appendChild(li)
 
     document.querySelector("#item").value = ""
-    </py-script>
+    </script>
 
 </body>
 </html>
