@@ -3,66 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Materiais - PyScript</title>
-
-    <!-- PyScript que FUNCIONA no GitHub Pages -->
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <title>Lista de Materiais</title>
 
     <style>
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             max-width: 600px;
-            margin: 30px auto;
+            margin: 50px auto;
+            background: #f5f5f5;
             padding: 20px;
-            background: #fafafa;
             border-radius: 10px;
         }
+
         input, button {
             padding: 10px;
             font-size: 16px;
             margin-top: 10px;
         }
+
         button {
             cursor: pointer;
         }
+
         ul {
             margin-top: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
         }
     </style>
 </head>
-
 <body>
 
     <h1>Lista de Materiais</h1>
 
-    <input id="item" placeholder="Digite um material">
-    <button py-click="adicionar()">Adicionar</button>
+    <input id="campo" type="text" placeholder="Digite um material">
+    <button onclick="adicionar()">Adicionar</button>
 
     <ul id="lista"></ul>
 
-    <!-- Ambiente PyScript obrigatório -->
-    <py-env>
-        - pyscript
-    </py-env>
+    <script>
+        function adicionar() {
+            let texto = document.getElementById("campo").value;
 
-    <!-- Código Python CORRETO -->
-    <script type="py">
-from pyscript import document
+            if (texto.trim() === "") return;
 
-def adicionar():
-    item = document.querySelector("#item").value
+            let lista = document.getElementById("lista");
+            let li = document.createElement("li");
+            li.innerText = texto;
+            lista.appendChild(li);
 
-    if not item.strip():
-        return
-
-    lista = document.querySelector("#lista")
-
-    li = document.createElement("li")
-    li.innerText = item
-    lista.appendChild(li)
-
-    document.querySelector("#item").value = ""
+            document.getElementById("campo").value = "";
+        }
     </script>
 
 </body>
