@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Materiais - PyScript</title>
+
+    <!-- PyScript CDN OFICIAL FUNCIONAL -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.9.2/core.css">
+    <script defer src="https://pyscript.net/releases/2024.9.2/core.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f6f6f6;
+            border-radius: 10px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button {
+            cursor: pointer;
+        }
+        ul {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista de Materiais</h1>
+
+    <input id="item" placeholder="Digite um material">
+    <button py-click="adicionar()">Adicionar</button>
+
+    <ul id="lista"></ul>
+
+    <py-script>
+from pyscript import document
+
+def adicionar():
+    item = document.querySelector("#item").value
+    if item.strip() == "":
+        return
+    
+    lista = document.querySelector("#lista")
+    li = document.createElement("li")
+    li.innerText = item
+    lista.appendChild(li)
+
+    document.querySelector("#item").value = ""
+    </py-script>
+
+</body>
+</html>
