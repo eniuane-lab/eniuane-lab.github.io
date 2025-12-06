@@ -21,15 +21,20 @@
         <input id="url" readonly>
     </div>
 
-    <!-- Área de visualização das cartas -->
+    <!-- Área onde aparece somente uma carta -->
     <div id="visualizacao" class="hidden">
-        <h2>Cartas:</h2>
-        <div id="cartas"></div>
-        <button id="embaralhar">Embaralhar Novamente</button>
+        <h2>Carta:</h2>
+
+        <div id="carta-exibida" class="carta"></div>
+
+        <div id="controles">
+            <button id="anterior">◀ Anterior</button>
+            <button id="proximo">Próxima ▶</button>
+        </div>
     </div>
 
 <script>
-    // --- FUNÇÃO PARA EMBARALHAR ARRAY ---
+    // --- EMBARALHAR ---
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -38,7 +43,7 @@
         return array;
     }
 
-    // --- SE A PÁGINA FOI ABERTA COM PARÂMETRO "f", MOSTRA AS CARTAS ---
+    // --- SE A PÁGINA TEM PARÂMETRO "f", MOSTRAR CARTAS ---
     const params = new URLSearchParams(window.location.search);
     const frasesCodificadas = params.get("f");
 
@@ -46,29 +51,32 @@
         document.getElementById("visualizacao").classList.remove("hidden");
 
         let frases = frasesCodificadas.split("|");
+        frases = shuffle(frases); // embaralhar ao carregar
 
-        const container = document.getElementById("cartas");
+        let index = 0;
 
-        function renderizarCartas() {
-            container.innerHTML = "";
-            frases.forEach(f => {
-                const card = document.createElement("div");
-                card.className = "carta";
-                card.textContent = f;
-                container.appendChild(card);
-            });
+        const carta = document.getElementById("carta-exibida");
+
+        function atualizarCarta() {
+            carta.textContent = frases[index];
         }
 
-        frases = shuffle(frases); // embaralha ao carregar
-        renderizarCartas();
+        atualizarCarta();
 
-        document.getElementById("embaralhar").onclick = () => {
-            frases = shuffle(frases);
-            renderizarCartas();
+        // Botão próximo
+        document.getElementById("proximo").onclick = () => {
+            index = (index + 1) % frases.length;
+            atualizarCarta();
+        };
+
+        // Botão anterior
+        document.getElementById("anterior").onclick = () => {
+            index = (index - 1 + frases.length) % frases.length;
+            atualizarCarta();
         };
     }
 
-    // --- GERAR URL COM FRASES DIGITADAS ---
+    // --- GERAR URL COM FRASES ---
     document.getElementById("gerar").onclick = () => {
         const texto = document.getElementById("frases").value.trim();
 
