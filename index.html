@@ -2,31 +2,43 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Gerar URL com Frases</title>
+    <title>Cartas de Frases</title>
     <link rel="stylesheet" href="script.css">
 </head>
 <body>
 
-    <h1>Gerador de URL com Frases</h1>
+    <h1>Gerador de Cartas com Frases</h1>
 
+    <!-- Área para digitar frases -->
     <div id="input-container">
         <textarea id="frases" placeholder="Digite uma frase por linha..."></textarea>
         <button id="gerar">Gerar URL</button>
     </div>
 
+    <!-- Resultado da URL -->
     <div id="resultado" class="hidden">
         <h2>Sua URL:</h2>
         <input id="url" readonly>
     </div>
 
+    <!-- Área de visualização das cartas -->
     <div id="visualizacao" class="hidden">
-        <h2>Frases carregadas da URL:</h2>
-        <ul id="lista"></ul>
-        <button id="embaralhar">Embaralhar</button>
+        <h2>Cartas:</h2>
+        <div id="cartas"></div>
+        <button id="embaralhar">Embaralhar Novamente</button>
     </div>
 
 <script>
-    // 📌 1. Se existe parâmetro "f", significa que estamos abrindo a URL
+    // --- FUNÇÃO PARA EMBARALHAR ARRAY ---
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // --- SE A PÁGINA FOI ABERTA COM PARÂMETRO "f", MOSTRA AS CARTAS ---
     const params = new URLSearchParams(window.location.search);
     const frasesCodificadas = params.get("f");
 
@@ -35,26 +47,28 @@
 
         let frases = frasesCodificadas.split("|");
 
-        const lista = document.getElementById("lista");
+        const container = document.getElementById("cartas");
 
-        function atualizarLista() {
-            lista.innerHTML = "";
+        function renderizarCartas() {
+            container.innerHTML = "";
             frases.forEach(f => {
-                const li = document.createElement("li");
-                li.textContent = f;
-                lista.appendChild(li);
+                const card = document.createElement("div");
+                card.className = "carta";
+                card.textContent = f;
+                container.appendChild(card);
             });
         }
 
-        atualizarLista();
+        frases = shuffle(frases); // embaralha ao carregar
+        renderizarCartas();
 
         document.getElementById("embaralhar").onclick = () => {
-            frases.sort(() => Math.random() - 0.5);
-            atualizarLista();
+            frases = shuffle(frases);
+            renderizarCartas();
         };
     }
 
-    // 📌 2. Gerar URL com frases digitadas
+    // --- GERAR URL COM FRASES DIGITADAS ---
     document.getElementById("gerar").onclick = () => {
         const texto = document.getElementById("frases").value.trim();
 
@@ -64,7 +78,7 @@
         }
 
         const lista = texto.split("\n").map(f => f.trim()).filter(f => f !== "");
-        const cod = lista.join("|"); // separador simples
+        const cod = lista.join("|");
 
         const urlGerada = `${window.location.origin}${window.location.pathname}?f=${encodeURIComponent(cod)}`;
 
