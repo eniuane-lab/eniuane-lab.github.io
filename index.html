@@ -5,35 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Materiais</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        input, button {
-            padding: 10px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        ul {
-            margin-top: 20px;
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-    </style>
+    <!-- Importando o CSS externo -->
+    <link rel="stylesheet" href="script.css">
 </head>
 <body>
 
@@ -51,11 +24,21 @@
             if (texto.trim() === "") return;
 
             let lista = document.getElementById("lista");
+
             let li = document.createElement("li");
-            li.innerText = texto;
+            li.innerHTML = `
+                <span>${texto}</span>
+                <button class="excluir" onclick="remover(this)">Excluir</button>
+            `;
+
             lista.appendChild(li);
 
             document.getElementById("campo").value = "";
+        }
+
+        function remover(botao) {
+            let li = botao.parentElement;
+            li.remove();
         }
     </script>
 
